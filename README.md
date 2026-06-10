@@ -54,7 +54,7 @@ This is documentation of **your** code, not a substitute for implementation.
 
 Below is a concise analysis of each hiring role and how to evaluate candidates using this repository. For each role I list the most relevant parts of the codebase, the test suites that exercise those areas, suggested additional small tasks to include in interviews/homework, and concrete acceptance criteria you can use when grading submissions.
 
-Lead Blockchain Engineer (Remote)
+Senior Blockchain Engineer (Remote)
 - Focus areas: `src/core/*`, `src/crypto/*`, `src/network/P2PServer.js`, `src/storage/persistence.js`
 - Tests that matter: `tests/unit/core/*`, `tests/unit/crypto/*`, `tests/integration/*` (blockchainFlow, chainReorg, genesis, multiWallet, serialization)
 - Suggested evaluation tasks: design a short architecture doc (consensus, difficulty retargeting), fix or add a deterministic performance benchmark for mining, review and harden validation logic (edge cases).
