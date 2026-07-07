@@ -1,4 +1,5 @@
 const { notImplemented } = require('../util/notImplemented');
+
 /** @see tests/unit/core/UTXOSet.test.js */
 class UTXOSet {
   constructor() {
@@ -10,43 +11,74 @@ class UTXOSet {
   }
 
   add(tx) {
-    notImplemented('UTXOSet.add');
+    tx.outputs.forEach((output, index) => {
+      const key = UTXOSet.key(tx.id, index);
+
+      this.utxos.set(key, {
+        txId: tx.id,
+        outputIndex: index,
+        address: output.address,
+        amount: output.amount,
+      });
+    });
   }
 
   spend(tx) {
-    notImplemented('UTXOSet.spend');
+    for (const input of tx.inputs) {
+      const key = UTXOSet.key(input.txId, input.outputIndex);
+      this.utxos.delete(key);
+    }
   }
 
   applyTransaction(tx) {
-    notImplemented('UTXOSet.applyTransaction');
+    // 1. spend inputs
+    this.spend(tx);
+    // 2. add outputs
+    this.add(tx);
   }
 
   applyBlock(transactions) {
-    notImplemented('UTXOSet.applyBlock');
+    for (const tx of transactions) {
+      this.applyTransaction(tx);
+    }
   }
 
   getBalance(address) {
-    notImplemented('UTXOSet.getBalance');
+    let total = 0;
+
+    for (const utxo of this.utxos.values()) {
+      if (utxo.address === address) {
+        total += utxo.amount;
+      }
+    }
+
+    return total;
   }
 
   getUnspentForAddress(address) {
-    notImplemented('UTXOSet.getUnspentForAddress');
+    return Array.from(this.utxos.values()).filter(
+        (u) => u.address === address
+    );
   }
 
   has(txId, outputIndex) {
-    notImplemented('UTXOSet.has');
+    return this.utxos.has(UTXOSet.key(txId, outputIndex));
   }
 
   clone() {
-    notImplemented('UTXOSet.clone');
+    const copy = new UTXOSet();
+    copy.utxos = new Map(this.utxos);
+    return copy;
   }
 
   toJSON() {
-    notImplemented('UTXOSet.toJSON');
+    return Array.from(this.utxos.entries());
   }
 
   static fromJSON(entries) {
-    notImplemented('UTXOSet.fromJSON');
+    const set = new UTXOSet();
+    set.utxos = new Map(entries);
+    return set;
   }
 }
 
